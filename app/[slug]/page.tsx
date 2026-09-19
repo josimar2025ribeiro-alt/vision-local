@@ -4,56 +4,62 @@ import { notFound } from "next/navigation";
 export default async function Page({params}:{params:{slug:string}}){
   const {data} = await supabase.from("sites").select("*").eq("slug",params.slug).single();
   if(!data) return notFound();
+
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-white">
-      <header className="flex justify-between items-center p-6 max-w-7xl mx-auto">
-        <h1 className="text-2xl font-black">🍕 Pizzaria Holambra</h1>
-        <a href="https://wa.me/5519988887777?text=Quero%20pizza!" className="bg-[#FF4D00] px-6 py-3 rounded-full font-bold">Peça Agora</a>
+    <div style={{minHeight:'100vh',background:'#0A0A0A',color:'white',fontFamily:'system-ui'}}>
+      <header style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'24px',maxWidth:'1100px',margin:'0 auto'}}>
+        <h1 style={{fontSize:'24px',fontWeight:900}}>🍕 Pizzaria Holambra</h1>
+        <a href="https://wa.me/5519988887777?text=Quero%20pizza!" style={{background:'#FF4D00',padding:'12px 24px',borderRadius:'999px',fontWeight:700,textDecoration:'none',color:'white'}}>Peça Agora</a>
       </header>
-      <main className="max-w-7xl mx-auto px-6 py-12">
-        <section className="grid md:grid-cols-2 gap-12 items-center">
+
+      <main style={{maxWidth:'1100px',margin:'0 auto',padding:'24px'}}>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'48px',alignItems:'center',padding:'48px 0'}}>
           <div>
-            <div className="bg-[#1A1A1A] inline-block px-4 py-2 rounded-full text-sm mb-4">⭐ 4.9/5 - 1.200 avaliações</div>
-            <h2 className="text-6xl font-black leading-none">A Melhor<br/><span className="text-[#FF4D00]">Pizza de</span><br/>Holambra</h2>
-            <p className="opacity-70 mt-6 text-xl">Massa artesanal, ingredientes frescos da região. Entrega em 30min ou sua pizza é grátis!</p>
-            <div className="flex gap-4 mt-8">
-              <a href="https://wa.me/5519988887777?text=Quero%20pizza!" className="bg-[#FF4D00] px-8 py-4 rounded-full font-bold">Pedir no WhatsApp</a>
-              <a href="#cardapio" className="border border-white/20 px-8 py-4 rounded-full font-bold">Ver Cardápio</a>
+            <div style={{background:'#1A1A1A',display:'inline-block',padding:'8px 16px',borderRadius:'999px',fontSize:'14px',marginBottom:'16px'}}>⭐ 4.9/5 - 1.200 avaliações</div>
+            <h2 style={{fontSize:'64px',fontWeight:900,lineHeight:'0.9',margin:0}}>A Melhor<br/><span style={{color:'#FF4D00'}}>Pizza de</span><br/>Holambra</h2>
+            <p style={{opacity:0.7,marginTop:'24px',fontSize:'20px'}}>Massa artesanal, ingredientes frescos da região. Entrega em 30min ou sua pizza é grátis!</p>
+            <div style={{display:'flex',gap:'16px',marginTop:'32px'}}>
+              <a href="https://wa.me/5519988887777?text=Quero%20pizza!" style={{background:'#FF4D00',padding:'16px 32px',borderRadius:'999px',fontWeight:700,color:'white',textDecoration:'none'}}>Pedir no WhatsApp</a>
+              <a href="#cardapio" style={{border:'1px solid rgba(255,255,255,0.2)',padding:'16px 32px',borderRadius:'999px',fontWeight:700,color:'white',textDecoration:'none'}}>Ver Cardápio</a>
             </div>
           </div>
-          <div className="bg-gradient-to-br from-[#FF4D00] to-[#FF8A00] rounded- p-2">
-            <div className="bg-[#111] rounded- p-8 h- flex items-center justify-center text-9xl">🍕</div>
+          <div style={{background:'linear-gradient(135deg,#FF4D00,#FF8A00)',borderRadius:'32px',padding:'8px'}}>
+            <div style={{background:'#111',borderRadius:'24px',height:'400px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'120px'}}>🍕</div>
           </div>
-        </section>
-        <section id="cardapio" className="mt-32">
-          <h3 className="text-4xl font-black text-center mb-12">Nosso Cardápio</h3>
-          <div className="grid md:grid-cols-3 gap-6">
+        </div>
+
+        <div id="cardapio" style={{marginTop:'80px'}}>
+          <h3 style={{fontSize:'40px',fontWeight:900,textAlign:'center',marginBottom:'48px'}}>Nosso Cardápio</h3>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))',gap:'24px'}}>
             {[
-              {nome:"Calabresa Especial",preco:"R$ 49",desc:"Calabresa artesanal, cebola, catupiry"},
-              {nome:"Portuguesa",preco:"R$ 52",desc:"Presunto, ovos, cebola, azeitona"},
-              {nome:"Margherita",preco:"R$ 45",desc:"Mussarela, tomate fresco, manjericão"},
-              {nome:"Frango Catupiry",preco:"R$ 54",desc:"Frango desfiado, catupiry original"},
-              {nome:"4 Queijos",preco:"R$ 56",desc:"Mussarela, gorgonzola, parmesão, catupiry"},
-              {nome:"Vegana Holambra",preco:"R$ 48",desc:"Legumes da colônia, molho especial"},
+              {nome:"Calabresa Especial",preco:"R$ 49",desc:"Calabresa artesanal, cebola, catupiry",emoji:"🔥"},
+              {nome:"Portuguesa",preco:"R$ 52",desc:"Presunto, ovos, cebola, azeitona",emoji:"🇵🇹"},
+              {nome:"Margherita",preco:"R$ 45",desc:"Mussarela, tomate fresco, manjericão",emoji:"🌿"},
+              {nome:"Frango Catupiry",preco:"R$ 54",desc:"Frango desfiado, catupiry original",emoji:"🍗"},
+              {nome:"4 Queijos",preco:"R$ 56",desc:"Mussarela, gorgonzola, parmesão",emoji:"🧀"},
+              {nome:"Vegana Holambra",preco:"R$ 48",desc:"Legumes da colônia, molho especial",emoji:"🌸"},
             ].map(p=>(
-              <div key={p.nome} className="bg-[#141414] p-6 rounded-2xl border border-white/10">
-                <div className="text-5xl mb-4">🍕</div>
-                <h4 className="font-bold text-xl">{p.nome}</h4>
-                <p className="opacity-60 text-sm mt-1">{p.desc}</p>
-                <div className="flex justify-between items-center mt-4">
-                  <span className="text-[#FF4D00] font-black">{p.preco}</span>
-                  <a href="https://wa.me/5519988887777" className="bg-white text-black px-4 py-2 rounded-full text-sm font-bold">Pedir</a>
+              <div key={p.nome} style={{background:'#141414',padding:'24px',borderRadius:'20px',border:'1px solid rgba(255,255,255,0.1)'}}>
+                <div style={{fontSize:'48px',marginBottom:'16px'}}>{p.emoji}</div>
+                <h4 style={{fontWeight:700,fontSize:'20px',margin:0}}>{p.nome}</h4>
+                <p style={{opacity:0.6,fontSize:'14px',marginTop:'4px'}}>{p.desc}</p>
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:'16px'}}>
+                  <span style={{color:'#FF4D00',fontWeight:900}}>{p.preco}</span>
+                  <a href="https://wa.me/5519988887777" style={{background:'white',color:'black',padding:'8px 16px',borderRadius:'999px',fontSize:'14px',fontWeight:700,textDecoration:'none'}}>Pedir</a>
                 </div>
               </div>
             ))}
           </div>
-        </section>
-        <section className="mt-20 bg-[#141414] rounded- p-8 text-center">
-          <p className="opacity-60">📍 R. Rota dos Imigrantes, 123 - Centro, Holambra - SP</p>
-          <p className="opacity-60 mt-2">⏰ Ter-Dom: 18h às 23h | WhatsApp: (19) 98888-7777</p>
-        </section>
+        </div>
+
+        <div style={{marginTop:'80px',background:'#141414',borderRadius:'24px',padding:'32px',textAlign:'center'}}>
+          <p style={{opacity:0.6}}>📍 R. Rota dos Imigrantes, 123 - Centro, Holambra - SP</p>
+          <p style={{opacity:0.6,marginTop:'8px'}}>⏰ Ter-Dom: 18h às 23h | WhatsApp: (19) 98888-7777</p>
+          <p style={{marginTop:'16px',fontSize:'12px',opacity:0.3}}>Site criado com Visão Local • vision-local.vercel.app/{data.slug}</p>
+        </div>
       </main>
-      <a href="https://wa.me/5519988887777" className="fixed bottom-6 right-6 bg-[#25D366] w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-2xl">💬</a>
+
+      <a href="https://wa.me/5519988887777" style={{position:'fixed',bottom:'24px',right:'24px',background:'#25D366',width:'56px',height:'56px',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'28px',boxShadow:'0 8px 32px rgba(0,0,0,0.4)',textDecoration:'none'}}>💬</a>
     </div>
   );
 }
