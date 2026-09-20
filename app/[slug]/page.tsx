@@ -4,8 +4,21 @@ import { supabase } from "../../lib/supabase"
 
 function getEmbedUrl(url){
 if(!url){return ""}
-if(url.indexOf("/embed")!==-1){return url}
-return "https://www.google.com/maps?q="+encodeURIComponent(url)+"&z=15&output=embed"
+if(url.indexOf("/d/embed")!==-1){return url}
+if(url.indexOf("mid=")!==-1){
+try{
+const mid=url.split("mid=")[1].split("&")[0]
+return "https://www.google.com/maps/d/embed?mid="+mid
+}catch(e){return url}
+}
+if(url.indexOf("/maps/d/")!==-1){
+try{
+const parts=url.split("/maps/d/")
+const id=parts[1].split("/")[0]
+return "https://www.google.com/maps/d/embed?mid="+id
+}catch(e){return url}
+}
+return "https://maps.google.com/maps?q="+encodeURIComponent(url)+"&z=15&output=embed"
 }
 
 export default async function Page(props:any){
@@ -37,7 +50,7 @@ return(
 {pixQr? <div style={{background:'white',padding:'16px',borderRadius:'20px',border:'3px solid #00E676'}}><div style={{color:'black',fontWeight:900,fontSize:'11px'}}>PIX QR CODE</div><img src={pixQr} style={{width:'100%',marginTop:'8px'}} alt="pix"/><div style={{color:'black',fontSize:'10px',background:'#E0FFE0',padding:'6px',borderRadius:'6px',marginTop:'6px',wordBreak:'break-all'}}>{data.pix_key}</div></div> : null}
 {wifiQr? <div style={{background:'white',padding:'16px',borderRadius:'20px',border:'3px solid #FF9500'}}><div style={{color:'black',fontWeight:900,fontSize:'11px'}}>WIFI QR CODE</div><img src={wifiQr} style={{width:'100%',marginTop:'8px'}} alt="wifi"/><div style={{background:'#FFF3E0',padding:'8px',borderRadius:'8px',marginTop:'8px'}}><div style={{color:'black',fontSize:'11px'}}>Rede: <b>{data.wifi_ssid||data.title}</b></div><div style={{color:'black',fontWeight:900}}>Senha: {data.wifi_password}</div></div></div> : null}
 </div>
-{data.localizacao? <div style={{background:'white',borderRadius:'20px',overflow:'hidden',border:'2px solid #1a73e8'}}><div style={{padding:'10px',fontWeight:900,color:'#1a73e8',fontSize:'12px'}}>Localização no Maps</div><iframe src={getEmbedUrl(data.localizacao)} style={{width:'100%',height:'200px',border:'none'}} loading="lazy" allowFullScreen title="maps"/><a href={data.localizacao} target="_blank" style={{display:'block',padding:'12px',fontWeight:900,color:'#1a73e8',textDecoration:'none',background:'#E8F0FE',textAlign:'center'}}>Abrir no Google Maps</a></div> : null}
+{data.localizacao? <div style={{background:'white',borderRadius:'20px',overflow:'hidden',border:'2px solid #1a73e8'}}><div style={{padding:'10px',fontWeight:900,color:'#1a73e8',fontSize:'12px'}}>Localização no Maps</div><iframe src={getEmbedUrl(data.localizacao)} style={{width:'100%',height:'220px',border:'none'}} loading="lazy" allowFullScreen title="maps"/><a href={data.localizacao} target="_blank" style={{display:'block',padding:'12px',fontWeight:900,color:'#1a73e8',textDecoration:'none',background:'#E8F0FE',textAlign:'center'}}>Abrir no Google Maps</a></div> : null}
 </div>
 </div>
 </div>
