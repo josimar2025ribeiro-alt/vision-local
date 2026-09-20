@@ -2,25 +2,6 @@ export const dynamic = 'force-dynamic'
 export const revalidate = 0
 import { supabase } from "../../lib/supabase"
 
-function getEmbedUrl(url){
-if(!url){return ""}
-if(url.indexOf("/d/embed")!==-1){return url}
-if(url.indexOf("mid=")!==-1){
-try{
-const mid=url.split("mid=")[1].split("&")[0]
-return "https://www.google.com/maps/d/embed?mid="+mid
-}catch(e){return url}
-}
-if(url.indexOf("/maps/d/")!==-1){
-try{
-const parts=url.split("/maps/d/")
-const id=parts[1].split("/")[0]
-return "https://www.google.com/maps/d/embed?mid="+id
-}catch(e){return url}
-}
-return "https://maps.google.com/maps?q="+encodeURIComponent(url)+"&z=15&output=embed"
-}
-
 export default async function Page(props:any){
 const slug=decodeURIComponent(props.params.slug).toLowerCase().replace(/[^a-z0-9-]+/g,"-").trim()
 const res=await supabase.from("biosites").select("*").eq("slug", slug).single()
@@ -33,6 +14,7 @@ if(data.pix_key){pixQr="https://quickchart.io/qr?text="+encodeURIComponent(Strin
 if(data.wifi_password){const txt="WIFI:T:WPA;S:"+(data.wifi_ssid||data.title)+";P:"+data.wifi_password+";;";wifiQr="https://quickchart.io/qr?text="+encodeURIComponent(txt)+"&size=400"}
 const logoSize=data.logo_size||92
 const logoPos=data.logo_pos||"centro"
+const mapsLink=data.localizacao?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(String(data.localizacao)):""
 
 return(
 <div style={{minHeight:'100vh',background:'#080808',display:'flex',justifyContent:'center',padding:'16px'}}>
@@ -50,7 +32,7 @@ return(
 {pixQr? <div style={{background:'white',padding:'16px',borderRadius:'20px',border:'3px solid #00E676'}}><div style={{color:'black',fontWeight:900,fontSize:'11px'}}>PIX QR CODE</div><img src={pixQr} style={{width:'100%',marginTop:'8px'}} alt="pix"/><div style={{color:'black',fontSize:'10px',background:'#E0FFE0',padding:'6px',borderRadius:'6px',marginTop:'6px',wordBreak:'break-all'}}>{data.pix_key}</div></div> : null}
 {wifiQr? <div style={{background:'white',padding:'16px',borderRadius:'20px',border:'3px solid #FF9500'}}><div style={{color:'black',fontWeight:900,fontSize:'11px'}}>WIFI QR CODE</div><img src={wifiQr} style={{width:'100%',marginTop:'8px'}} alt="wifi"/><div style={{background:'#FFF3E0',padding:'8px',borderRadius:'8px',marginTop:'8px'}}><div style={{color:'black',fontSize:'11px'}}>Rede: <b>{data.wifi_ssid||data.title}</b></div><div style={{color:'black',fontWeight:900}}>Senha: {data.wifi_password}</div></div></div> : null}
 </div>
-{data.localizacao? <div style={{background:'white',borderRadius:'20px',overflow:'hidden',border:'2px solid #1a73e8'}}><div style={{padding:'10px',fontWeight:900,color:'#1a73e8',fontSize:'12px'}}>Localização no Maps</div><iframe src={getEmbedUrl(data.localizacao)} style={{width:'100%',height:'220px',border:'none'}} loading="lazy" allowFullScreen title="maps"/><a href={data.localizacao} target="_blank" style={{display:'block',padding:'12px',fontWeight:900,color:'#1a73e8',textDecoration:'none',background:'#E8F0FE',textAlign:'center'}}>Abrir no Google Maps</a></div> : null}
+{data.localizacao? <a href={mapsLink} target="_blank" style={{background:'white',borderRadius:'20px',overflow:'hidden',border:'2px solid #1a73e8',display:'block',textDecoration:'none'}}><div style={{padding:'10px',fontWeight:900,color:'#1a73e8',fontSize:'12px'}}>Localização no Maps</div><div style={{background:'#E8F0FE',padding:'20px',textAlign:'center'}}><div style={{fontSize:'32px'}}>📍</div><div style={{color:'#1a73e8',fontWeight:900,marginTop:'8px',fontSize:'13px'}}>{data.localizacao}</div></div><div style={{padding:'14px',fontWeight:900,color:'white',background:'#1a73e8',textAlign:'center'}}>Abrir no Google Maps</div></a> : null}
 </div>
 </div>
 </div>
