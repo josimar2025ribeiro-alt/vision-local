@@ -10,7 +10,7 @@ if(!data){return <div style={{minHeight:'100vh',background:'#000',color:'white',
 const isVideo=data.foto_url&&String(data.foto_url).includes(".mp4")
 const logoSize=data.logo_size||92
 const logoPos=data.logo_pos||"centro"
-const mapsLink=data.localizacao?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(String(data.localizacao)):""
+const mapsLink=data.localizacao||""
 
 return(
 <div style={{minHeight:'100vh',background:'#080808',display:'flex',justifyContent:'center',padding:'16px'}}>
@@ -24,7 +24,7 @@ return(
 <div style={{marginTop:'20px',display:'flex',flexDirection:'column',gap:'14px'}}>
 {data.whatsapp? <a href={"https://wa.me/"+String(data.whatsapp).replace(/\D/g,'')} style={{background:'#25D366',padding:'18px',borderRadius:'20px',display:'flex',alignItems:'center',justifyContent:'center',gap:'10px',textDecoration:'none'}}><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" style={{width:'28px',height:'28px'}} alt="wa"/><span style={{fontWeight:900,color:'white',fontSize:'16px'}}>WhatsApp</span></a> : null}
 {data.instagram? <a href={"https://instagram.com/"+String(data.instagram).replace('@','')} style={{background:'linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)',padding:'18px',borderRadius:'20px',display:'flex',alignItems:'center',justifyContent:'center',gap:'10px',textDecoration:'none'}}><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" style={{width:'24px',height:'24px'}} alt="insta"/><span style={{fontWeight:900,color:'white'}}>Instagram</span></a> : null}
-{data.localizacao? <a href={mapsLink} target="_blank" style={{background:'white',borderRadius:'20px',overflow:'hidden',border:'2px solid #1a73e8',display:'block',textDecoration:'none'}}><div style={{padding:'10px',fontWeight:900,color:'#1a73e8',fontSize:'12px',background:'white'}}>Localização no Maps</div><img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=600&h=300&fit=crop" style={{width:'100%',height:'180px',objectFit:'cover',display:'block'}} alt="mapa"/><div style={{padding:'10px',background:'#E8F0FE',color:'#1a73e8',fontWeight:900,fontSize:'12px',textAlign:'center'}}>{data.localizacao}</div><div style={{padding:'14px',fontWeight:900,color:'white',background:'#1a73e8',textAlign:'center'}}>Abrir no Google Maps</div></a> : null}
+{mapsLink? <a href={mapsLink} target="_blank" style={{background:'white',borderRadius:'20px',overflow:'hidden',border:'2px solid #1a73e8',display:'block',textDecoration:'none'}}><div style={{padding:'10px',fontWeight:900,color:'#1a73e8',fontSize:'12px',background:'white',textAlign:'center'}}>Localização</div>{data.mapa_imagem_url? <img src={data.mapa_imagem_url} style={{width:'100%',height:'180px',objectFit:'cover',display:'block'}} alt="mapa"/> : <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Google_Maps_icon_%282020%29.svg/500px-Google_Maps_icon_%282020%29.svg.png" style={{width:'100%',height:'180px',objectFit:'contain',background:'#E8F0FE',padding:'20px',display:'block'}} alt="maps"/>}<div style={{padding:'12px',fontWeight:900,color:'white',background:'#1a73e8',textAlign:'center'}}>Ver no Maps</div></a> : null}
 </div>
 </div>
 </div>
