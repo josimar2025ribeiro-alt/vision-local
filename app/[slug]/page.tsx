@@ -2,7 +2,6 @@
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 import { supabase } from "../../lib/supabase"
-
 export default async function Page(props:any){
 const slug=decodeURIComponent(props.params.slug).toLowerCase().replace(/[^a-z0-9-]+/g,"-").trim()
 const res=await supabase.from("biosites").select("*").eq("slug", slug).single()
