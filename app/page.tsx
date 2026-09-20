@@ -1,0 +1,1 @@
+export default function Home(){return <div style={{background:"#0A0A0A",minHeight:"100vh",color:"white",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"system-ui"}}><a href="/criar" style={{background:"white",color:"black",padding:"16px 32px",borderRadius:12,textDecoration:"none",fontWeight:900}}>Criar meu site</a></div>}
