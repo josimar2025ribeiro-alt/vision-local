@@ -130,4 +130,59 @@ return(
 <b style={{fontSize:'11px',color:'#FF9500'}}>📶 WIFI - QR CODE EM CIMA + SENHA EMBAIXO</b>
 <input style={inp} placeholder="Nome da rede WiFi ex: Moda_Feminina" value={f.wifi_ssid} onChange={e=>setF({...f,wifi_ssid:e.target.value})}/>
 <input style={inp} placeholder="Senha do WiFi ex: 12345678" value={f.wifi} onChange={e=>setF({...f,wifi:e.target.value})}/>
-{wifiQrUrl&&<div style={{background:'white',padding:'14px',borderRadius:'16px',marginTop:'10px',textAlign:'center'}}><div style={{fontSize:'10px',color:'black',fontWeight:900,letterSpacing:'1px'}}>ESCANEIE PARA CONECTAR</div><img src={wifiQrUrl} style={{width:'180px',height:'180px',margin:'10px auto',display:'block'}}/><div style={{background:'#FFF3E0',padding:'10px',borderRadius:'10px'}}><div style
+{wifiQrUrl&&<div style={{background:'white',padding:'14px',borderRadius:'16px',marginTop:'10px',textAlign:'center'}}><div style={{fontSize:'10px',color:'black',fontWeight:900,letterSpacing:'1px'}}>ESCANEIE PARA CONECTAR</div><img src={wifiQrUrl} style={{width:'180px',height:'180px',margin:'10px auto',display:'block'}}/><div style={{background:'#FFF3E0',padding:'10px',borderRadius:'10px'}}><div style={{fontSize:'12px',color:'black'}}>Rede: <b>{f.wifi_ssid}</b></div><div style={{fontSize:'14px',color:'black',fontWeight:900}}>Senha: {f.wifi}</div></div></div>}
+</div>
+
+<input style={inp} placeholder="Link Google Maps" value={f.loc} onChange={e=>setF({...f,loc:e.target.value})}/>
+
+<div style={{background:'#111',padding:'12px',borderRadius:'16px',margin:'12px 0',border:'1px solid #333'}}>
+<b style={{fontSize:'12px'}}>COLUNAS EXTRAS EM BAIXO - IMAGENS/VIDEOS</b>
+{cols.map((c,i)=><div key={i} style={{background:'#1A1A1A',padding:'10px',borderRadius:'10px',marginTop:'10px'}}>
+<div style={{display:'flex',justifyContent:'space-between'}}><b style={{fontSize:'10px'}}>COLUNA {i+1}</b><button onClick={()=>setCols(cols.filter((_,idx)=>idx!==i))} style={{background:'#FF1A1A',border:'none',color:'white',borderRadius:'6px',padding:'2px 8px'}}>X</button></div>
+<input type="file" accept="image/*,video/*" onChange={async e=>{const file=e.target.files?.[0];if(file){const u=await upload(file,"colunas");const nc=[...cols];nc[i]={...nc[i],url:u.url,type:u.type};setCols(nc)}}}/>
+<input style={{...inp,marginTop:'6px'}} placeholder="Descricao da coluna" value={c.desc} onChange={e=>{const nc=[...cols];nc[i].desc=e.target.value;setCols(nc)}}/>
+{c.url&&<div style={{marginTop:'6px'}}>{c.type==='video'?<video src={c.url} style={{width:'100%',height:'80px',objectFit:'cover',borderRadius:'8px'}} muted/>:<img src={c.url} style={{width:'100%',height:'80px',objectFit:'cover',borderRadius:'8px'}}/>}</div>}
+</div>)}
+<button onClick={()=>setCols([...cols,{url:"",desc:"",type:"image"}])} style={{background:'#222',border:'1px dashed #555',color:'white',width:'100%',padding:'12px',borderRadius:'10px',marginTop:'8px'}}>+ Adicionar Coluna</button>
+</div>
+
+<button onClick={salvar} style={{background:t.btn,padding:'20px',width:'100%',border:'none',borderRadius:'16px',fontWeight:900,fontSize:'18px',color:t.bg==='#FFF'||t.bg==='#F5F5F5'?'black':'white'}}>SALVAR LOJA COMPLETA</button>
+</div>
+
+<div style={{width:'50%',background:t.bg,display:'flex',justifyContent:'center',padding:'20px',overflowY:'auto',height:'100vh',position:'relative'}}>
+<div style={{position:'absolute',width:'320px',height:'320px',background:t.b1,borderRadius:'50%',filter:'blur(80px)',opacity:0.4,top:'10%',left:'10%',animation:'float1 6s ease-in-out infinite'}}/>
+<div style={{position:'absolute',width:'420px',height:'420px',background:t.b2,borderRadius:'50%',filter:'blur(100px)',opacity:0.3,bottom:'10%',right:'5%',animation:'float2 8s ease-in-out infinite'}}/>
+<div style={{width:'400px',position:'relative',zIndex:2}}>
+<div style={{background:t.card,backdropFilter:'blur(20px)',borderRadius:'32px',overflow:'hidden',border:`1px solid ${t.btn}40`,boxShadow:`0 20px 60px ${t.b1}40`}}>
+{f.foto? (isVideo? <video src={f.foto} autoPlay muted loop playsInline style={{width:'100%',height:'280px',objectFit:'cover'}}/> : <div style={{height:'280px',background:`url(${f.foto}) center/cover`}}/>):<div style={{height:'120px',background:`linear-gradient(135deg,${t.b1},${t.b2})`}}/>}
+<div style={{padding:'20px',marginTop:'-50px',textAlign:'center'}}>
+{f.logo? <img src={f.logo} style={{width:'92px',height:'92px',borderRadius:'50%',border:`4px solid ${t.bg}`,margin:'0 auto',display:'block',background:'white',objectFit:'cover'}}/> : <div style={{width:'92px',height:'92px',borderRadius:'50%',background:t.btn,margin:'0 auto'}}/>}
+<h1 style={{color:f.corTitulo,fontWeight:900,fontSize:'28px',margin:'12px 0 4px',letterSpacing:'-1px'}}>{f.title||'NOME DA LOJA'}</h1>
+{f.capaTitulo&&<h3 style={{color:t.btn,fontSize:'15px',margin:'4px 0'}}>{f.capaTitulo}</h3>}
+{f.capaDesc&&<p style={{color:f.corDesc,fontSize:'13px'}}>{f.capaDesc}</p>}
+
+<div style={{display:'flex',flexDirection:'column',gap:'16px',marginTop:'20px'}}>
+{servicos.filter(s=>s.nome||s.url).map((s,i)=><div key={i} style={{background:t.card,borderRadius:'20px',overflow:'hidden',textAlign:'left',border:`1px solid ${t.btn}20`}}>{s.url&&(s.type==='video'?<video src={s.url} style={{width:'100%',height:'150px',objectFit:'cover'}} muted/>:<img src={s.url} style={{width:'100%',height:'150px',objectFit:'cover'}}/>)}<div style={{padding:'14px'}}><div style={{fontWeight:900,color:t.txt,fontSize:'16px'}}>{s.nome} {s.preco&&<span style={{color:t.btn}}> - {s.preco}</span>}</div>{s.desc&&<div style={{fontSize:'13px',opacity:0.7,color:t.txt,marginTop:'4px'}}>{s.desc}</div>}</div></div>)}
+
+{catalogo.filter(c=>c.nome||c.url).map((c,i)=><div key={i} style={{background:t.card,borderRadius:'20px',overflow:'hidden',textAlign:'left',border:`1px solid ${t.btn}20`}}>{c.url&&(c.type==='video'?<video src={c.url} style={{width:'100%',height:'150px',objectFit:'cover'}} muted/>:<img src={c.url} style={{width:'100%',height:'150px',objectFit:'cover'}}/>)}<div style={{padding:'14px'}}><div style={{fontWeight:900,color:t.txt,fontSize:'16px'}}>{c.nome} {c.preco&&<span style={{color:t.btn}}> - {c.preco}</span>}</div>{c.desc&&<div style={{fontSize:'13px',opacity:0.7,color:t.txt,marginTop:'4px'}}>{c.desc}</div>}</div></div>)}
+
+{f.wpp&&<a href={`https://wa.me/${f.wpp.replace(/\D/g,'')}`} style={{background:'#25D366',padding:'22px',borderRadius:'22px',fontWeight:900,fontSize:'20px',display:'flex',gap:'12px',justifyContent:'center',alignItems:'center',color:'white',textDecoration:'none',boxShadow:'0 10px 30px #25D36660'}}><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" style={{width:'30px'}}/> WhatsApp</a>}
+{f.insta&&<a href={`https://instagram.com/${f.insta.replace('@','')}`} style={{background:'linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)',padding:'22px',borderRadius:'22px',fontWeight:900,fontSize:'19px',color:'white',textDecoration:'none',display:'flex',gap:'10px',justifyContent:'center',alignItems:'center'}}><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" style={{width:'26px',background:'white',borderRadius:'6px'}}/> {f.insta}</a>}
+
+{f.pix&&<div style={{background:'white',padding:'18px',borderRadius:'22px'}}><b style={{color:'black',fontSize:'13px'}}>PIX QR CODE</b><img src={pixQrUrl} style={{width:'200px',height:'200px',margin:'12px auto',display:'block'}}/><div style={{color:'black',fontSize:'12px',wordBreak:'break-all'}}>{f.pix} {f.pixValor&&`- R$ ${f.pixValor}`}</div></div>}
+
+{f.wifi_ssid&&f.wifi&&<div style={{background:'white',padding:'18px',borderRadius:'22px',textAlign:'center'}}><div style={{fontSize:'11px',color:'black',fontWeight:900}}>WIFI QR CODE</div><img src={wifiQrUrl} style={{width:'200px',height:'200px',margin:'12px auto',display:'block'}}/><div style={{background:'#FFF3E0',padding:'12px',borderRadius:'12px'}}><div style={{color:'black',fontSize:'13px'}}>Rede: <b>{f.wifi_ssid}</b></div><div style={{color:'black',fontWeight:900,fontSize:'16px'}}>Senha: {f.wifi}</div></div></div>}
+
+{f.loc&&<a href={f.loc} style={{background:'white',padding:'22px',borderRadius:'22px',fontWeight:900,fontSize:'19px',color:'#1a73e8',textDecoration:'none',display:'flex',gap:'10px',justifyContent:'center',alignItems:'center',boxShadow:'0 10px 30px rgba(0,0,0,0.2)'}}><img src="https://upload.wikimedia.org/wikipedia/commons/b/bd/Google_Maps_Logo_2020.svg" style={{width:'26px'}}/> Ver no Maps</a>}
+
+{cols.filter(c=>c.url).length>0&&<div><div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px'}}>{cols.filter(c=>c.url).map((c,i)=><div key={i} style={{background:t.card,borderRadius:'18px',overflow:'hidden',border:`1px solid ${t.btn}20`}}>{c.type==='video'?<video src={c.url} style={{width:'100%',height:'120px',objectFit:'cover'}} muted/>:<img src={c.url} style={{width:'100%',height:'120px',objectFit:'cover'}}/>}{c.desc&&<div style={{padding:'10px',fontSize:'12px',color:t.txt}}>{c.desc}</div>}</div>)}</div></div>}
+
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+)
+}
