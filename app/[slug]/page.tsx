@@ -2,6 +2,15 @@ export const dynamic = 'force-dynamic'
 export const revalidate = 0
 import { supabase } from "../../lib/supabase"
 
+async function getMapData(address){
+try{
+const res=await fetch("https://nominatim.openstreetmap.org/search?format=json&q="+encodeURIComponent(address),{headers:{"User-Agent":"biosite"},next:{revalidate:0}})
+const data=await res.json()
+if(data&&data[0]){return {lat:data[0].lat,lon:data[0].lon}}
+}catch(e){}
+return null
+}
+
 export default async function Page(props:any){
 const slug=decodeURIComponent(props.params.slug).toLowerCase().replace(/[^a-z0-9-]+/g,"-").trim()
 const res=await supabase.from("biosites").select("*").eq("slug", slug).single()
@@ -15,6 +24,11 @@ if(data.wifi_password){const txt="WIFI:T:WPA;S:"+(data.wifi_ssid||data.title)+";
 const logoSize=data.logo_size||92
 const logoPos=data.logo_pos||"centro"
 const mapsLink=data.localizacao?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(String(data.localizacao)):""
+let mapImg=null
+if(data.localizacao){
+const coords=await getMapData(String(data.localizacao))
+if(coords){mapImg="https://staticmap.openstreetmap.de/staticmap.php?center="+coords.lat+","+coords.lon+"&zoom=16&size=600x300&markers="+coords.lat+","+coords.lon+",red-pushpin"}
+}
 
 return(
 <div style={{minHeight:'100vh',background:'#080808',display:'flex',justifyContent:'center',padding:'16px'}}>
@@ -32,7 +46,7 @@ return(
 {pixQr? <div style={{background:'white',padding:'16px',borderRadius:'20px',border:'3px solid #00E676'}}><div style={{color:'black',fontWeight:900,fontSize:'11px'}}>PIX QR CODE</div><img src={pixQr} style={{width:'100%',marginTop:'8px'}} alt="pix"/><div style={{color:'black',fontSize:'10px',background:'#E0FFE0',padding:'6px',borderRadius:'6px',marginTop:'6px',wordBreak:'break-all'}}>{data.pix_key}</div></div> : null}
 {wifiQr? <div style={{background:'white',padding:'16px',borderRadius:'20px',border:'3px solid #FF9500'}}><div style={{color:'black',fontWeight:900,fontSize:'11px'}}>WIFI QR CODE</div><img src={wifiQr} style={{width:'100%',marginTop:'8px'}} alt="wifi"/><div style={{background:'#FFF3E0',padding:'8px',borderRadius:'8px',marginTop:'8px'}}><div style={{color:'black',fontSize:'11px'}}>Rede: <b>{data.wifi_ssid||data.title}</b></div><div style={{color:'black',fontWeight:900}}>Senha: {data.wifi_password}</div></div></div> : null}
 </div>
-{data.localizacao? <a href={mapsLink} target="_blank" style={{background:'white',borderRadius:'20px',overflow:'hidden',border:'2px solid #1a73e8',display:'block',textDecoration:'none'}}><div style={{padding:'10px',fontWeight:900,color:'#1a73e8',fontSize:'12px'}}>Localização no Maps</div><div style={{background:'#E8F0FE',padding:'20px',textAlign:'center'}}><div style={{fontSize:'32px'}}>📍</div><div style={{color:'#1a73e8',fontWeight:900,marginTop:'8px',fontSize:'13px'}}>{data.localizacao}</div></div><div style={{padding:'14px',fontWeight:900,color:'white',background:'#1a73e8',textAlign:'center'}}>Abrir no Google Maps</div></a> : null}
+{data.localizacao? <a href={mapsLink} target="_blank" style={{background:'white',borderRadius:'20px',overflow:'hidden',border:'2px solid #1a73e8',display:'block',textDecoration:'none'}}><div style={{padding:'10px',fontWeight:900,color:'#1a73e8',fontSize:'12px'}}>Localização no Maps</div>{mapImg? <img src={mapImg} style={{width:'100%',height:'200px',objectFit:'cover',display:'block'}} alt="mapa"/> : <div style={{height:'200px',background:'#E8F0FE',display:'flex',alignItems:'center',justifyContent:'center'}}><div style={{textAlign:'center'}}><div style={{fontSize:'30px'}}>🗺️</div><div style={{color:'#1a73e8',fontWeight:900,fontSize:'12px',marginTop:'8px'}}>{data.localizacao}</div></div></div>}<div style={{padding:'8px',background:'#E8F0FE',color:'#1a73e8',fontWeight:700,fontSize:'11px',textAlign:'center'}}>{data.localizacao}</div><div style={{padding:'14px',fontWeight:900,color:'white',background:'#1a73e8',textAlign:'center'}}>Abrir no Google Maps</div></a> : null}
 </div>
 </div>
 </div>
